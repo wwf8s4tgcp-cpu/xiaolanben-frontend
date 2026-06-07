@@ -771,28 +771,22 @@ const handleSave = async () => {
         } else {
           console.error('头像上传失败:', result.message)
           avatarError.value = result.message || '头像上传失败，请重试'
+          saving.value = false
           return
         }
       } catch (error) {
         console.error('头像上传异常:', error)
         avatarError.value = '头像上传失败，请重试'
+        saving.value = false
         return
       } finally {
         uploading.value = false
       }
     }
 
-    // 触发保存事件并等待父组件处理完成
+    // 先关闭弹窗，再触发保存（父组件异步调用 API 并自行展示结果）
+    handleClose()
     emit('save', formData)
-    console.log('资料更新成功')
-
-    // 显示成功提示
-    $message.success('资料更新成功')
-
-    // 延迟关闭模态框，确保数据已更新
-    setTimeout(() => {
-      handleClose()
-    }, 100)
   } catch (error) {
     console.error('保存失败:', error)
   } finally {

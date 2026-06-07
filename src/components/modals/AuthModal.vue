@@ -118,6 +118,7 @@ import MessageToast from '@/components/MessageToast.vue'
 import CaptchaModal from '@/components/modals/CaptchaModal.vue'
 import { useUserStore } from '@/stores/user.js'
 import { useScrollLock } from '@/composables/useScrollLock'
+import apiConfig from '@/config/api.js'
 
 const props = defineProps({
   initialMode: {
@@ -293,7 +294,7 @@ const clearError = (field) => {
 const getCaptcha = async () => {
   isLoadingCaptcha.value = true
   try {
-    const response = await fetch('/api/auth/captcha')
+    const response = await fetch(`${apiConfig.baseURL}/auth/captcha`)
     const result = await response.json()
     if (result.code === 200) {
       captchaId.value = result.data.captchaId
@@ -563,7 +564,7 @@ const openResetPassword = () => {
 // 获取邮件功能配置
 const fetchEmailConfig = async () => {
   try {
-    const response = await fetch('/api/auth/email-config')
+    const response = await fetch(`${apiConfig.baseURL}/auth/email-config`)
     const result = await response.json()
     if (result.code === 200) {
       emailEnabled.value = result.data.emailEnabled

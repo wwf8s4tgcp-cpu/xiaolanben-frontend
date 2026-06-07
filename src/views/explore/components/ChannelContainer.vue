@@ -101,7 +101,12 @@ function startChannelSwitch(item) {
 
 
 // 组件挂载时检查当前路由
-onMounted(() => {
+onMounted(async () => {
+    // 如果频道只有默认推荐，重新加载
+    if (channelStore.channels.length <= 1) {
+        await channelStore.loadChannels()
+    }
+
     // 如果当前路由是 /explore，重定向到当前选中的频道
     if (route.path === '/explore') {
         const currentChannelPath = channelStore.getChannelPath(channelStore.activeChannelId)

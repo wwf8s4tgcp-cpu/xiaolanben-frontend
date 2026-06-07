@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, watch, onUnmounted } from 'vue'
+import { ref, computed, onMounted, nextTick, watch, onUnmounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { useScroll, useWindowSize } from '@vueuse/core'
 import { useNavigationStore } from '@/stores/navigation'
@@ -68,6 +68,8 @@ function handleAvatarError(event) {
   event.target.src = defaultAvatar
 }
 
+const $message = inject('$message')
+
 // 处理资料保存成功
 const handleProfileSaved = async (formData) => {
   try {
@@ -78,11 +80,14 @@ const handleProfileSaved = async (formData) => {
       // 更新本地用户信息
       userStore.updateUserInfo(formData)
       console.log('用户资料更新成功')
+      $message.success('资料更新成功')
     } else {
       console.error('用户资料更新失败:', response.message)
+      $message.error(response.message || '资料更新失败')
     }
   } catch (error) {
     console.error('用户资料更新API调用失败:', error)
+    $message.error('网络异常，请稍后重试')
   }
 
   closeEditProfileModal()
